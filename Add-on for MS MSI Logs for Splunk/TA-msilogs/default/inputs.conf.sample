@@ -1,0 +1,28 @@
+
+#Example Input - just a standard file monitor etc 
+#Change to Batch with sinkhole to delete after etc 
+#On MSI install etc use /l or /lv and use a different name per type personally so that sourcetypes can be changed
+#Example Powershell for outputting MSI logs while installing
+
+#Normal
+#  msiexec.exe /i C:\\Downloads\msiinstaller.msi /l C:\Windows\Temp\msiinstaller-msi.log
+
+#Verbose
+#  msiexec.exe /i C:\\Downloads\msiinstaller.msi /lv C:\Windows\Temp\msiinstaller-msi.log
+
+#Just Monitors the files
+[monitor://C:\Windows\Temp\*-msi.log]
+index = msi_logs
+sourcetype = msi:logs
+crcSalt=<SOURCE>
+ignoreOlderThan = 30d
+disabled = 1
+
+#Deletes the files after ingesting them
+[batch://C:\Windows\Temp\*-msi.log]
+index = msi_logs
+sourcetype = msi:logs
+crcSalt=<SOURCE>
+move_policy = sinkhole
+ignoreOlderThan = 30d
+disabled = 1
